@@ -1,0 +1,46 @@
+//
+// Created by xl on 17-12-4.
+//
+
+#include <iostream>
+#include <cstring>
+
+using std::string;
+const int R = 256;  // 字母表大小
+const int SIZE = 1000;  // 模式串最大长度
+int dfa[R][SIZE];
+
+// 得到dfa数组
+void getDFA(string pat) {
+    int M = pat.length();
+    for (int i = 0; i <R ; ++i) {
+        for (int j = 0; j <M ; ++j) {
+            dfa[i][j] = 0;
+        }
+    }
+    dfa[pat[0]][0] = 1;
+    int X = 0;   // 自动机重启状态
+    for (int i = 1; i < M; ++i) {
+        for (int c = 0; c < R; ++c) {
+            dfa[c][i] = dfa[c][X];
+        }
+        dfa[pat[i]][i] = i + 1;
+        X = dfa[pat[i]][X];
+    }
+}
+
+// 进行匹配
+void kmp(string pat, string txt) {
+    int M = pat.length();
+    int N = txt.length();
+    getDFA(pat);
+    int i, j;
+    for (i = 0, j = 0; i < N && j < M; ++i) {
+        j = dfa[txt[i]][j];
+    }
+    if (j == M) {
+        std::cout << "匹配成功！\n";
+    } else {
+        std::cout << "匹配失败！\n";
+    }
+}
