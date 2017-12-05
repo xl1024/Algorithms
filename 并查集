@@ -1,0 +1,72 @@
+//
+// Created by xl on 17-12-5.
+//
+
+#ifndef ALGORITHMS_UNION_H
+#define ALGORITHMS_UNION_H
+
+#include <vector>
+#include <iostream>
+using std::vector;
+class Union {
+private:
+    int N;
+    vector<int> id;
+    vector<int> we;  // 表示每个结点的权重
+public:
+    Union(int n)  // 构造函数
+    {
+        this->N = n;
+        this->id = vector<int> (N);
+        this->we = vector<int> (N);
+        for (int i = 0; i <N ; ++i) {
+            this->id[i] = i;
+            this->we[i] = 1;
+        }
+    }
+    bool connected(int p,int q) // 查看两个结点是否连接
+    {
+        return root(p)==root(q);
+    }
+    int root(int i)    // 找到 p 的根节点
+    {
+        while (this->id[i]!=i){
+            this->id[i] = this->id[id[i]];   // 在遍历过程中将每个结点的根节点设为其根节点的根节点
+            i = this->id[i];
+        }
+        return i;
+    }
+    void unions(int p,int q)  // 合并两个节点
+    {
+        int i = root(p);
+        int j = root(q);
+        if (this->we[i]>this->we[j]){   
+            this->id[j] = i;
+            this->we[i] += this->we[j];
+        } else{
+            this->id[i] = j;
+            this->we[j] += this->we[i];
+        }
+    }
+
+    void show(){
+        std::cout << "id:     ";
+        for (int i = 0; i <N ; ++i) {
+            std::cout << i << "\t";
+        }
+        std::cout << "\n";
+        std::cout << "root:   ";
+        for (int i = 0; i <N ; ++i) {
+            std::cout << this->id[i] << "\t";
+        }
+        std::cout << "\n";
+        std::cout << "weight: ";
+        for (int i = 0; i <N ; ++i) {
+            std::cout<< this->we[i] << "\t";
+        }
+    }
+
+};
+
+
+#endif //ALGORITHMS_UNION_H
