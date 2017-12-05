@@ -4,14 +4,14 @@
 
 #include <iostream>
 #include <cstring>
+#include <vector>
 
 using std::string;
+using std::vector;
 const int R = 256;  // 字母表大小
-const int SIZE = 1000;  // 模式串最大长度
-int dfa[R][SIZE];
 
 // 得到dfa数组
-void getDFA(string pat) {
+void getDFA(string pat,vector< vector<int> > &dfa){
     int M = pat.length();
     for (int i = 0; i <R ; ++i) {
         for (int j = 0; j <M ; ++j) {
@@ -33,13 +33,20 @@ void getDFA(string pat) {
 void kmp(string pat, string txt) {
     int M = pat.length();
     int N = txt.length();
-    getDFA(pat);
+    vector< vector<int> > dfa(R,vector<int>(M));
+    getDFA(pat,dfa);
     int i, j;
     for (i = 0, j = 0; i < N && j < M; ++i) {
         j = dfa[txt[i]][j];
     }
     if (j == M) {
         std::cout << "匹配成功！\n";
+
+        for (int k = 0; k < i-j; ++k) {
+            std::cout << " ";
+        }
+        std::cout << pat << "\n";
+        std::cout << txt << "\n";
     } else {
         std::cout << "匹配失败！\n";
     }
